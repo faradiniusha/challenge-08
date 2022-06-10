@@ -105,7 +105,7 @@ describe("test api handleRegister", () => {
     });
   });
 
-  describe("GET /v1/auth/whoami", () => {
+  describe("test api WhoAmI", () => {
     it("should response with 200 as status code", async () => {
         const accessToken = await request(app).post("/v1/auth/login").send({
             email: "faradini@gmail.com",

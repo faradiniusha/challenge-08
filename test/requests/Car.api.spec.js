@@ -3,14 +3,6 @@ const app = require("../../app/index.js")
 const dotenv = require('dotenv');
 dotenv.config();
 
-describe('test index api', () => {
-    it('return 200 ok', (done) => {
-        request(app)
-        .get("/")
-        .expect('Content-Type', 'application/json; charset=utf-8')
-        .expect(200, done)
-    });
-});
 
 describe('test api cars', () => {
     it('return 200 ok',(done) => {
@@ -39,9 +31,9 @@ describe('test api create car', () => {
         const token = `Bearer ${response.body.accessToken}`;
 
         const carPayload = {
-            name: "Honda",
-            price: 1000,
-            size: "small"
+            name: "BMW",
+            price: 5000,
+            size: "medium"
         };
 
         await request(app)
@@ -71,9 +63,9 @@ describe('test api create car', () => {
         const token = `Bearer ${response.body.accessToken}`;
 
         const carPayload = {
-            name: "Honda",
-            price: 1000,
-            size: "small"
+            name: "BMW",
+            price: 5000,
+            size: "medium"
         };
 
         await request(app)
@@ -101,12 +93,71 @@ describe('test get car by id', () => {
     });
 });
 
-describe("DELETE /v1/cars/:id", () => {
-    it("should return 204 No Content", async () => {
+
+describe("test api rent cars", () => {
+    it("return 201 created", async () => {
+        const loginAuth =  {
+            email: 'faradini@gmail.com',
+            password: 'sukses'
+        };
+
+        await request(app)
+        .post("/v1/auth/register")
+        .send(loginAuth);
+
+        const response = await request(app)
+        .post("/v1/auth/login")
+        .send(loginAuth);
+
+        const token = `Bearer ${response.body.accessToken}`;
+
+        await request(app)
+        .post("/v1/cars/10/rent")
+        .set("Authorization", token)
+        .send({
+            rentStartedAt: "2020-04-02",
+            rentEndedAt: "2020-04-05",
+          })
+        .expect(201)
+        .expect("Content-Type", "application/json; charset=utf-8");
+    });
+
+    it("return 401 Unauthorized", async () => {
+        const loginAuth =  {
+            email: 'fara@gmail.com',
+            password: 'faradini'
+        };
+
+        await request(app)
+        .post("/v1/auth/register")
+        .send(loginAuth);
+
+        const response = await request(app)
+        .post("/v1/auth/login")
+        .send(loginAuth);
+
+        const token = `Bearer ${response.body.accessToken}`;
+
+        await request(app)
+        .post("/v1/cars/10/rent")
+        .set("Authorization", token)
+        .send({
+            rentStartedAt: "2020-04-02",
+            rentEndedAt: "2020-04-05",
+          })
+        .expect(401)
+        .expect("Content-Type", "application/json; charset=utf-8");
+    });
+  });
+
+
+
+describe("test delete cars api", () => {
+    it("return 204 no content", async () => {
 
         const loginAuth =  {
-            email: 'usha0619674@gmail.com',
-            password: 'sukses'
+            email: 'fara@gmail.com',
+            password: 'faradini'
         };
 
       const response = await request(app)
@@ -116,7 +167,7 @@ describe("DELETE /v1/cars/:id", () => {
         const token = `Bearer ${response.body.accessToken}`;
 
         await request(app)
-        .delete("/v1/cars/1")
+        .delete("/v1/cars/4")
         .set("Authorization", token)
         .expect(204);
 
@@ -142,6 +193,9 @@ describe("DELETE /v1/cars/:id", () => {
 
     });
   });
+
+
+
 
 
 
