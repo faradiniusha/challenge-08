@@ -106,13 +106,9 @@ describe('test api delete car', () => {
 
 
         const loginAuth =  {
-            email: 'fara@gmail.com',
-            password: 'faradini'
+            email: 'usha0619674@gmail.com',
+            password: 'sukses'
         };
-
-        await request(app)
-        .post("/v1/auth/register")
-        .send(loginAuth);
 
         const response = await request(app)
         .post("/v1/auth/login")
@@ -121,7 +117,7 @@ describe('test api delete car', () => {
         const token = `Bearer ${response.body.accessToken}`;
 
         await request(app)
-        .delete("/v1/cars/4")
+        .delete("/v1/cars/1")
         .set("Authorization", token)
         .expect(204);
 
@@ -133,16 +129,12 @@ describe('test api delete car', () => {
             password: 'sukses'
         };
 
-        await request(app)
-        .post("/v1/auth/register")
-        .send(loginAuth);
 
         const response = await request(app)
         .post("/v1/auth/login")
         .send(loginAuth);
 
         const token = `Bearer ${response.body.accessToken}`;
-
 
         await request(app)
         .delete("/v1/cars/10")
