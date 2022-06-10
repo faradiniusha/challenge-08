@@ -1,7 +1,6 @@
 const request = require('supertest')
 const app = require("../../app/index.js")
 const dotenv = require('dotenv');
-const { JsonWebTokenError } = require('jsonwebtoken');
 dotenv.config();
 
 describe('test index api', () => {
@@ -102,15 +101,18 @@ describe('test get car by id', () => {
     });
 });
 
-
 describe('test api delete car', () => {
-    it('return 204 deleted no data', async() => {
-    jest.setTimeout(50000);
+    it('return 204 created', async() => {
+
+
         const loginAuth =  {
-            email: 'usha0619674@gmail.com',
-            password: 'sukses'
+            email: 'fara@gmail.com',
+            password: 'faradini'
         };
 
+        await request(app)
+        .post("/v1/auth/register")
+        .send(loginAuth);
 
         const response = await request(app)
         .post("/v1/auth/login")
@@ -118,14 +120,12 @@ describe('test api delete car', () => {
 
         const token = `Bearer ${response.body.accessToken}`;
 
-
         await request(app)
-        .delete("/v1/cars/10")
+        .delete("/v1/cars/4")
         .set("Authorization", token)
-        expect(204);
-        })
-    })
+        .expect(204);
 
+    });
 
     it('return 401 unauthorized access', async() => {
         const loginAuth = {
@@ -133,6 +133,9 @@ describe('test api delete car', () => {
             password: 'sukses'
         };
 
+        await request(app)
+        .post("/v1/auth/register")
+        .send(loginAuth);
 
         const response = await request(app)
         .post("/v1/auth/login")
@@ -140,14 +143,16 @@ describe('test api delete car', () => {
 
         const token = `Bearer ${response.body.accessToken}`;
 
+
         await request(app)
         .delete("/v1/cars/10")
         .set("Authorization", token)
-        .then((res) => {
-            expect(res.status).toBe(401);
-            expect(res.body.error).toBeDefined();
-            })
+        .expect(401);
+    
     });
+});
+
+
 
 
 
