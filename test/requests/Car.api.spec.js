@@ -101,16 +101,15 @@ describe('test get car by id', () => {
     });
 });
 
-describe('test api delete car', () => {
-    it('return 204 created', async() => {
-
+describe("DELETE /v1/cars/:id", () => {
+    it("should return 204 No Content", async () => {
 
         const loginAuth =  {
             email: 'usha0619674@gmail.com',
             password: 'sukses'
         };
 
-        const response = await request(app)
+      const response = await request(app)
         .post("/v1/auth/login")
         .send(loginAuth);
 
@@ -123,26 +122,26 @@ describe('test api delete car', () => {
 
     });
 
-    it('return 401 unauthorized access', async() => {
-        const loginAuth = {
+    it("should return 401 Unauthorized Access", async () => {
+
+        const loginAuth =  {
             email: 'faradini@gmail.com',
-            password: 'sukses'
+            password:'sukses'
         };
 
-
-        const response = await request(app)
+      const response = await request(app)
         .post("/v1/auth/login")
         .send(loginAuth);
 
         const token = `Bearer ${response.body.accessToken}`;
 
         await request(app)
-        .delete("/v1/cars/10")
+        .delete("/v1/cars/1")
         .set("Authorization", token)
         .expect(401);
-    
+
     });
-});
+  });
 
 
 
